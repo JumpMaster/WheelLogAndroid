@@ -18,6 +18,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.IBinder;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -37,12 +38,13 @@ import android.widget.Toast;
 
 import com.cooper.wheellog.utils.Constants;
 import com.cooper.wheellog.utils.Constants.WHEEL_TYPE;
+import com.cooper.wheellog.utils.Constants.ALARM_TYPE;
 import com.cooper.wheellog.utils.SettingsUtil;
+//import com.cooper.wheellog.utils.NotificationUtil;
 import com.cooper.wheellog.utils.Typefaces;
 import com.cooper.wheellog.views.WheelView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -66,6 +68,7 @@ import timber.log.Timber;
 
 import static com.cooper.wheellog.utils.MathsUtil.kmToMiles;
 
+
 @RuntimePermissions
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -77,19 +80,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     TextView tvSpeed;
     TextView tvTemperature;
+	TextView tvTemperature2;
+	TextView tvAngle;
+	TextView tvRoll;
     TextView tvCurrent;
     TextView tvPower;
     TextView tvVoltage;
     TextView tvBattery;
     TextView tvFanStatus;
     TextView tvTopSpeed;
+	TextView tvAverageSpeed;
+	TextView tvAverageRidingSpeed;
     TextView tvDistance;
+	TextView tvWheelDistance;
+	TextView tvUserDistance;
     TextView tvModel;
     TextView tvName;
     TextView tvVersion;
     TextView tvSerial;
     TextView tvTotalDistance;
     TextView tvRideTime;
+	TextView tvRidingTime;
     TextView tvMode;
 
     LineChart chart1;
@@ -154,11 +165,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         else if (WheelData.getInstance().getSerial().isEmpty())
                             sendBroadcast(new Intent(Constants.ACTION_REQUEST_KINGSONG_SERIAL_DATA));
                     }
+					if (intent.hasExtra(Constants.INTENT_EXTRA_WHEEL_SETTINGS)) {
+						setWheelPreferences();						
+					}
                     updateScreen(intent.hasExtra(Constants.INTENT_EXTRA_GRAPH_UPDATE_AVILABLE));
                     break;
                 case Constants.ACTION_PEBBLE_SERVICE_TOGGLED:
                     setMenuIconStates();
                     break;
+				//case Constants.ACTION_WHEEL_SETTING_CHANGED:
+				//	if (intent.hasExtra(Constants.INTENT_EXTRA_WHEEL_REFRESH)) {
+				//		setWheelPreferences();
+				//	} 
+				//	break;
                 case Constants.ACTION_LOGGING_SERVICE_TOGGLED:
                     boolean running = intent.getBooleanExtra(Constants.INTENT_EXTRA_IS_RUNNING, false);
                     if (intent.hasExtra(Constants.INTENT_EXTRA_LOGGING_FILE_LOCATION)) {
@@ -172,6 +191,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 case Constants.ACTION_PREFERENCE_CHANGED:
                     loadPreferences();
                     break;
+				case Constants.ACTION_WHEEL_TYPE_RECOGNIZED:
+					//System.out.println("WheelRecognizedMain");
+                    String wheel_type = intent.getStringExtra(Constants.INTENT_EXTRA_WHEEL_TYPE);
+                    //showSnackBar(getResources().getString(R.string.wheel_type_recognized, wheel_type), 5000);
+					//((PreferencesFragment) getPreferencesFragment()).show_main_menu();
+					break;
+				case Constants.ACTION_ALARM_TRIGGERED:					
+					int alarmType = ((ALARM_TYPE) intent.getSerializableExtra(Constants.INTENT_EXTRA_ALARM_TYPE)).getValue();
+					if (alarmType == 0 ) {
+						showSnackBar(getResources().getString(R.string.alarm_text_speed), 3000);						
+					}
+					if (alarmType == 1 ) {
+						showSnackBar(getResources().getString(R.string.alarm_text_current), 3000);						
+					}
+					if (alarmType == 2 ) {
+						showSnackBar(getResources().getString(R.string.alarm_text_temperature), 3000);						
+					}
+					break;
             }
         }
     };
@@ -203,7 +240,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mConnectionState = connectionState;
         setMenuIconStates();
     }
-
+	
+	
+	private void setWheelPreferences() {
+		Timber.i("SetWheelPreferences");
+		((PreferencesFragment) getPreferencesFragment()).refreshWheelSettings(WheelData.getInstance().getWheelLight(), 
+																				WheelData.getInstance().getWheelLed(), 
+																				WheelData.getInstance().getWheelHandleButton(), 
+																				WheelData.getInstance().getWheelMaxSpeed(), 
+																				WheelData.getInstance().getSpeakerVolume(),
+																				WheelData.getInstance().getPedalsPosition());
+	}
+	
     private void setMenuIconStates() {
         if (mMenu == null)
             return;
@@ -257,13 +305,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         TextView tvWaitText = (TextView) findViewById(R.id.tvWaitText);
         TextView tvTitleSpeed = (TextView) findViewById(R.id.tvTitleSpeed);
         TextView tvTitleMaxSpeed = (TextView) findViewById(R.id.tvTitleTopSpeed);
+		TextView tvTitleAverageSpeed = (TextView) findViewById(R.id.tvTitleAverageSpeed);
+		TextView tvTitleAverageRidingSpeed = (TextView) findViewById(R.id.tvTitleAverageRidingSpeed);
         TextView tvTitleBattery = (TextView) findViewById(R.id.tvTitleBattery);
         TextView tvTitleDistance = (TextView) findViewById(R.id.tvTitleDistance);
+		TextView tvTitleWheelDistance = (TextView) findViewById(R.id.tvTitleWheelDistance);
+		TextView tvTitleUserDistance = (TextView) findViewById(R.id.tvTitleUserDistance);
         TextView tvTitleRideTime = (TextView) findViewById(R.id.tvTitleRideTime);
+		TextView tvTitleRidingTime = (TextView) findViewById(R.id.tvTitleRidingTime);
         TextView tvTitleVoltage = (TextView) findViewById(R.id.tvTitleVoltage);
         TextView tvTitleCurrent = (TextView) findViewById(R.id.tvTitleCurrent);
         TextView tvTitlePower = (TextView) findViewById(R.id.tvTitlePower);
         TextView tvTitleTemperature = (TextView) findViewById(R.id.tvTitleTemperature);
+		TextView tvTitleTemperature2 = (TextView) findViewById(R.id.tvTitleTemperature2);
+		TextView tvTitleAngle = (TextView) findViewById(R.id.tvTitleAngle);
+		TextView tvTitleRoll = (TextView) findViewById(R.id.tvTitleRoll);
         TextView tvTitleFanStatus = (TextView) findViewById(R.id.tvTitleFanStatus);
         TextView tvTitleMode = (TextView) findViewById(R.id.tvTitleMode);
         TextView tvTitleTotalDistance = (TextView) findViewById(R.id.tvTitleTotalDistance);
@@ -279,12 +335,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 tvSpeed.setVisibility(View.VISIBLE);
                 tvTitleMaxSpeed.setVisibility(View.VISIBLE);
                 tvTopSpeed.setVisibility(View.VISIBLE);
+				tvTitleAverageSpeed.setVisibility(View.VISIBLE);
+                tvAverageSpeed.setVisibility(View.VISIBLE);
+				tvTitleAverageRidingSpeed.setVisibility(View.VISIBLE);
+                tvAverageRidingSpeed.setVisibility(View.VISIBLE);
                 tvTitleBattery.setVisibility(View.VISIBLE);
                 tvBattery.setVisibility(View.VISIBLE);
                 tvTitleDistance.setVisibility(View.VISIBLE);
                 tvDistance.setVisibility(View.VISIBLE);
+				tvTitleWheelDistance.setVisibility(View.VISIBLE);
+                tvWheelDistance.setVisibility(View.VISIBLE);
+				tvTitleUserDistance.setVisibility(View.VISIBLE);
+                tvUserDistance.setVisibility(View.VISIBLE);
                 tvTitleRideTime.setVisibility(View.VISIBLE);
                 tvRideTime.setVisibility(View.VISIBLE);
+				tvTitleRidingTime.setVisibility(View.VISIBLE);
+                tvRidingTime.setVisibility(View.VISIBLE);
                 tvTitleVoltage.setVisibility(View.VISIBLE);
                 tvVoltage.setVisibility(View.VISIBLE);
                 tvTitleCurrent.setVisibility(View.VISIBLE);
@@ -314,12 +380,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 tvSpeed.setVisibility(View.VISIBLE);
                 tvTitleMaxSpeed.setVisibility(View.VISIBLE);
                 tvTopSpeed.setVisibility(View.VISIBLE);
+				tvTitleAverageSpeed.setVisibility(View.VISIBLE);
+                tvAverageSpeed.setVisibility(View.VISIBLE);
+				tvTitleAverageRidingSpeed.setVisibility(View.VISIBLE);
+                tvAverageRidingSpeed.setVisibility(View.VISIBLE);
                 tvTitleBattery.setVisibility(View.VISIBLE);
                 tvBattery.setVisibility(View.VISIBLE);
                 tvTitleDistance.setVisibility(View.VISIBLE);
                 tvDistance.setVisibility(View.VISIBLE);
+				tvTitleWheelDistance.setVisibility(View.VISIBLE);
+                tvWheelDistance.setVisibility(View.VISIBLE);
+				tvTitleUserDistance.setVisibility(View.VISIBLE);
+                tvUserDistance.setVisibility(View.VISIBLE);
                 tvTitleRideTime.setVisibility(View.VISIBLE);
                 tvRideTime.setVisibility(View.VISIBLE);
+				tvTitleRidingTime.setVisibility(View.VISIBLE);
+                tvRidingTime.setVisibility(View.VISIBLE);
                 tvTitleVoltage.setVisibility(View.VISIBLE);
                 tvVoltage.setVisibility(View.VISIBLE);
                 tvTitleCurrent.setVisibility(View.VISIBLE);
@@ -331,18 +407,119 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 tvTitleTotalDistance.setVisibility(View.VISIBLE);
                 tvTotalDistance.setVisibility(View.VISIBLE);
                 break;
+            case INMOTION:
+                tvWaitText.setVisibility(View.GONE);
+                tvTitleSpeed.setVisibility(View.VISIBLE);
+                tvSpeed.setVisibility(View.VISIBLE);
+                tvTitleMaxSpeed.setVisibility(View.VISIBLE);
+                tvTopSpeed.setVisibility(View.VISIBLE);
+				tvTitleAverageSpeed.setVisibility(View.VISIBLE);
+                tvAverageSpeed.setVisibility(View.VISIBLE);
+				tvTitleAverageRidingSpeed.setVisibility(View.VISIBLE);
+                tvAverageRidingSpeed.setVisibility(View.VISIBLE);
+                tvTitleBattery.setVisibility(View.VISIBLE);
+                tvBattery.setVisibility(View.VISIBLE);
+                tvTitleDistance.setVisibility(View.VISIBLE);
+                tvDistance.setVisibility(View.VISIBLE);
+				tvTitleUserDistance.setVisibility(View.VISIBLE);
+                tvUserDistance.setVisibility(View.VISIBLE);
+                tvTitleRideTime.setVisibility(View.VISIBLE);
+                tvRideTime.setVisibility(View.VISIBLE);
+				tvTitleRidingTime.setVisibility(View.VISIBLE);
+                tvRidingTime.setVisibility(View.VISIBLE);
+                tvTitleVoltage.setVisibility(View.VISIBLE);
+                tvVoltage.setVisibility(View.VISIBLE);
+                tvTitleCurrent.setVisibility(View.VISIBLE);
+                tvCurrent.setVisibility(View.VISIBLE);
+                tvTitlePower.setVisibility(View.VISIBLE);
+                tvPower.setVisibility(View.VISIBLE);
+                tvTitleTemperature.setVisibility(View.VISIBLE);
+                tvTemperature.setVisibility(View.VISIBLE);
+				tvTitleTemperature2.setVisibility(View.VISIBLE);
+                tvTemperature2.setVisibility(View.VISIBLE);
+				tvTitleMode.setVisibility(View.VISIBLE);
+                tvMode.setVisibility(View.VISIBLE);
+				tvTitleAngle.setVisibility(View.VISIBLE);
+                tvAngle.setVisibility(View.VISIBLE);
+				tvTitleRoll.setVisibility(View.VISIBLE);
+                tvRoll.setVisibility(View.VISIBLE);
+                tvTitleTotalDistance.setVisibility(View.VISIBLE);
+                tvTotalDistance.setVisibility(View.VISIBLE);
+				tvTitleModel.setVisibility(View.VISIBLE);
+                tvModel.setVisibility(View.VISIBLE);
+                tvTitleVersion.setVisibility(View.VISIBLE);
+                tvVersion.setVisibility(View.VISIBLE);
+                tvTitleSerial.setVisibility(View.VISIBLE);
+                tvSerial.setVisibility(View.VISIBLE);
+                break;
+
+            case NINEBOT_Z:
+                tvWaitText.setVisibility(View.GONE);
+                tvTitleSpeed.setVisibility(View.VISIBLE);
+                tvSpeed.setVisibility(View.VISIBLE);
+                tvTitleMaxSpeed.setVisibility(View.VISIBLE);
+                tvTopSpeed.setVisibility(View.VISIBLE);
+                tvTitleAverageSpeed.setVisibility(View.VISIBLE);
+                tvAverageSpeed.setVisibility(View.VISIBLE);
+                tvTitleAverageRidingSpeed.setVisibility(View.VISIBLE);
+                tvAverageRidingSpeed.setVisibility(View.VISIBLE);
+                tvTitleBattery.setVisibility(View.VISIBLE);
+                tvBattery.setVisibility(View.VISIBLE);
+                tvTitleDistance.setVisibility(View.VISIBLE);
+                tvDistance.setVisibility(View.VISIBLE);
+                tvTitleUserDistance.setVisibility(View.VISIBLE);
+                tvUserDistance.setVisibility(View.VISIBLE);
+                tvTitleRideTime.setVisibility(View.VISIBLE);
+                tvRideTime.setVisibility(View.VISIBLE);
+                tvTitleRidingTime.setVisibility(View.VISIBLE);
+                tvRidingTime.setVisibility(View.VISIBLE);
+                tvTitleVoltage.setVisibility(View.VISIBLE);
+                tvVoltage.setVisibility(View.VISIBLE);
+                tvTitleCurrent.setVisibility(View.VISIBLE);
+                tvCurrent.setVisibility(View.VISIBLE);
+                tvTitlePower.setVisibility(View.VISIBLE);
+                tvPower.setVisibility(View.VISIBLE);
+                tvTitleTemperature.setVisibility(View.VISIBLE);
+                tvTemperature.setVisibility(View.VISIBLE);
+                tvTitleTemperature2.setVisibility(View.GONE);
+                tvTemperature2.setVisibility(View.GONE);
+                tvTitleMode.setVisibility(View.GONE);
+                tvMode.setVisibility(View.GONE);
+                tvTitleAngle.setVisibility(View.VISIBLE);
+                tvAngle.setVisibility(View.VISIBLE);
+                tvTitleRoll.setVisibility(View.VISIBLE);
+                tvRoll.setVisibility(View.VISIBLE);
+                tvTitleTotalDistance.setVisibility(View.VISIBLE);
+                tvTotalDistance.setVisibility(View.VISIBLE);
+                tvTitleModel.setVisibility(View.VISIBLE);
+                tvModel.setVisibility(View.VISIBLE);
+                tvTitleVersion.setVisibility(View.VISIBLE);
+                tvVersion.setVisibility(View.VISIBLE);
+                tvTitleSerial.setVisibility(View.VISIBLE);
+                tvSerial.setVisibility(View.VISIBLE);
+                break;
             default:
                 tvWaitText.setVisibility(View.VISIBLE);
                 tvTitleSpeed.setVisibility(View.GONE);
                 tvSpeed.setVisibility(View.GONE);
                 tvTitleMaxSpeed.setVisibility(View.GONE);
                 tvTopSpeed.setVisibility(View.GONE);
+				tvTitleAverageSpeed.setVisibility(View.GONE);
+                tvAverageSpeed.setVisibility(View.GONE);
+				tvTitleAverageRidingSpeed.setVisibility(View.GONE);
+                tvAverageRidingSpeed.setVisibility(View.GONE);
                 tvTitleBattery.setVisibility(View.GONE);
                 tvBattery.setVisibility(View.GONE);
                 tvTitleDistance.setVisibility(View.GONE);
                 tvDistance.setVisibility(View.GONE);
+				tvTitleWheelDistance.setVisibility(View.GONE);
+                tvWheelDistance.setVisibility(View.GONE);
+				tvTitleUserDistance.setVisibility(View.GONE);
+                tvUserDistance.setVisibility(View.GONE);
                 tvTitleRideTime.setVisibility(View.GONE);
                 tvRideTime.setVisibility(View.GONE);
+				tvTitleRidingTime.setVisibility(View.GONE);
+                tvRidingTime.setVisibility(View.GONE);
                 tvTitleVoltage.setVisibility(View.GONE);
                 tvVoltage.setVisibility(View.GONE);
                 tvTitleCurrent.setVisibility(View.GONE);
@@ -351,6 +528,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 tvPower.setVisibility(View.GONE);
                 tvTitleTemperature.setVisibility(View.GONE);
                 tvTemperature.setVisibility(View.GONE);
+				tvTitleTemperature2.setVisibility(View.GONE);
+                tvTemperature2.setVisibility(View.GONE);
+				tvTitleAngle.setVisibility(View.GONE);
+                tvAngle.setVisibility(View.GONE);
+				tvTitleRoll.setVisibility(View.GONE);
+                tvRoll.setVisibility(View.GONE);
                 tvTitleFanStatus.setVisibility(View.GONE);
                 tvFanStatus.setVisibility(View.GONE);
                 tvTitleMode.setVisibility(View.GONE);
@@ -375,38 +558,51 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 wheelView.setSpeed(WheelData.getInstance().getSpeed());
                 wheelView.setBattery(WheelData.getInstance().getBatteryLevel());
                 wheelView.setTemperature(WheelData.getInstance().getTemperature());
-                wheelView.setRideTime(WheelData.getInstance().getRideTimeString());
+                wheelView.setRideTime(WheelData.getInstance().getRidingTimeString());
                 wheelView.setTopSpeed(WheelData.getInstance().getTopSpeedDouble());
                 wheelView.setDistance(WheelData.getInstance().getDistanceDouble());
                 wheelView.setTotalDistance(WheelData.getInstance().getTotalDistanceDouble());
                 wheelView.setVoltage(WheelData.getInstance().getVoltageDouble());
                 wheelView.setCurrent(WheelData.getInstance().getPowerDouble());
+				wheelView.setAverageSpeed(WheelData.getInstance().getAverageRidingSpeedDouble());
                 break;
             case 1: // Text View
                 if (use_mph) {
                     tvSpeed.setText(String.format(Locale.US, "%.1f mph", kmToMiles(WheelData.getInstance().getSpeedDouble())));
                     tvTopSpeed.setText(String.format(Locale.US, "%.1f mph", kmToMiles(WheelData.getInstance().getTopSpeedDouble())));
+					tvAverageSpeed.setText(String.format(Locale.US, "%.1f mph", kmToMiles(WheelData.getInstance().getAverageSpeedDouble())));
+					tvAverageRidingSpeed.setText(String.format(Locale.US, "%.1f mph", kmToMiles(WheelData.getInstance().getAverageRidingSpeedDouble())));
                     tvDistance.setText(String.format(Locale.US, "%.2f mi", kmToMiles(WheelData.getInstance().getDistanceDouble())));
+					tvWheelDistance.setText(String.format(Locale.US, "%.2f mi", kmToMiles(WheelData.getInstance().getWheelDistanceDouble())));
+					tvUserDistance.setText(String.format(Locale.US, "%.2f mi", kmToMiles(WheelData.getInstance().getUserDistanceDouble())));
                     tvTotalDistance.setText(String.format(Locale.US, "%.2f mi", kmToMiles(WheelData.getInstance().getTotalDistanceDouble())));
                 } else {
                     tvSpeed.setText(String.format(Locale.US, "%.1f km/h", WheelData.getInstance().getSpeedDouble()));
                     tvTopSpeed.setText(String.format(Locale.US, "%.1f km/h", WheelData.getInstance().getTopSpeedDouble()));
-                    tvDistance.setText(String.format(Locale.US, "%.2f km", WheelData.getInstance().getDistanceDouble()));
-                    tvTotalDistance.setText(String.format(Locale.US, "%.2f km", WheelData.getInstance().getTotalDistanceDouble()));
+					tvAverageSpeed.setText(String.format(Locale.US, "%.1f km/h", WheelData.getInstance().getAverageSpeedDouble()));
+					tvAverageRidingSpeed.setText(String.format(Locale.US, "%.1f km/h", WheelData.getInstance().getAverageRidingSpeedDouble()));
+                    tvDistance.setText(String.format(Locale.US, "%.3f km", WheelData.getInstance().getDistanceDouble()));
+					tvWheelDistance.setText(String.format(Locale.US, "%.3f km", WheelData.getInstance().getWheelDistanceDouble()));
+					tvUserDistance.setText(String.format(Locale.US, "%.3f km", WheelData.getInstance().getUserDistanceDouble()));
+                    tvTotalDistance.setText(String.format(Locale.US, "%.3f km", WheelData.getInstance().getTotalDistanceDouble()));
                 }
 
                 tvVoltage.setText(String.format(Locale.US, "%.2fV", WheelData.getInstance().getVoltageDouble()));
                 tvTemperature.setText(String.format(Locale.US, "%d°C", WheelData.getInstance().getTemperature()));
+				tvTemperature2.setText(String.format(Locale.US, "%d°C", WheelData.getInstance().getTemperature2()));
+				tvAngle.setText(String.format(Locale.US, "%.2f°", WheelData.getInstance().getAngle()));
+				tvRoll.setText(String.format(Locale.US, "%.2f°", WheelData.getInstance().getRoll()));
                 tvCurrent.setText(String.format(Locale.US, "%.2fA", WheelData.getInstance().getCurrentDouble()));
                 tvPower.setText(String.format(Locale.US, "%.2fW", WheelData.getInstance().getPowerDouble()));
                 tvBattery.setText(String.format(Locale.US, "%d%%", WheelData.getInstance().getBatteryLevel()));
                 tvFanStatus.setText(WheelData.getInstance().getFanStatus() == 0 ? "Off" : "On");
-                tvVersion.setText(String.format(Locale.US, "%.2f", WheelData.getInstance().getVersion()/100.0));
+                tvVersion.setText(String.format(Locale.US, "%s", WheelData.getInstance().getVersion()));
                 tvName.setText(WheelData.getInstance().getName());
                 tvModel.setText(WheelData.getInstance().getModel());
                 tvSerial.setText(WheelData.getInstance().getSerial());
                 tvRideTime.setText(WheelData.getInstance().getRideTimeString());
-                tvMode.setText(getResources().getStringArray(R.array.modes)[WheelData.getInstance().getMode()]);
+				tvRidingTime.setText(WheelData.getInstance().getRidingTimeString());
+                tvMode.setText(WheelData.getInstance().getModeStr());
                 break;
             case 2: // Graph  View
                 if (updateGraph) {
@@ -514,17 +710,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         tvCurrent = (TextView) findViewById(R.id.tvCurrent);
         tvPower = (TextView) findViewById(R.id.tvPower);
         tvTemperature = (TextView) findViewById(R.id.tvTemperature);
+		tvTemperature2 = (TextView) findViewById(R.id.tvTemperature2);
+		tvAngle = (TextView) findViewById(R.id.tvAngle);
+		tvRoll = (TextView) findViewById(R.id.tvRoll);
         tvVoltage = (TextView) findViewById(R.id.tvVoltage);
         tvBattery = (TextView) findViewById(R.id.tvBattery);
         tvFanStatus = (TextView) findViewById(R.id.tvFanStatus);
         tvTopSpeed = (TextView) findViewById(R.id.tvTopSpeed);
+		tvAverageSpeed = (TextView) findViewById(R.id.tvAverageSpeed);
+		tvAverageRidingSpeed = (TextView) findViewById(R.id.tvAverageRidingSpeed);
         tvDistance = (TextView) findViewById(R.id.tvDistance);
+		tvWheelDistance = (TextView) findViewById(R.id.tvWheelDistance);
+		tvUserDistance = (TextView) findViewById(R.id.tvUserDistance);
         tvTotalDistance = (TextView) findViewById(R.id.tvTotalDistance);
         tvModel = (TextView) findViewById(R.id.tvModel);
         tvName = (TextView) findViewById(R.id.tvName);
         tvVersion = (TextView) findViewById(R.id.tvVersion);
         tvSerial = (TextView) findViewById(R.id.tvSerial);
         tvRideTime = (TextView) findViewById(R.id.tvRideTime);
+		tvRidingTime = (TextView) findViewById(R.id.tvRidingTime);
         tvMode = (TextView) findViewById(R.id.tvMode);
         wheelView = (WheelView) findViewById(R.id.wheelView);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -641,23 +845,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void onPause() {
         super.onPause();
         unregisterReceiver(mBluetoothUpdateReceiver);
+		//cationUtil.getInstance().unregisterReceiver();
         if (SettingsUtil.isAutoUploadEnabled(this))
             getGoogleApiClient().disconnect();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         stopPebbleService();
         stopLoggingService();
-
+        WheelData.getInstance().full_reset();
         if (mBluetoothLeService != null) {
             unbindService(mServiceConnection);
             stopService(new Intent(getApplicationContext(), BluetoothLeService.class));
             mBluetoothLeService = null;
         }
-        WheelData.getInstance().reset();
+        super.onDestroy();
+        new CountDownTimer(500, 100) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // do something after 1s
+            }
+
+            @Override
+            public void onFinish() {
+                android.os.Process.killProcess(android.os.Process.myPid());
+                // do something end times 5s
+            }
+
+        }.start();
+
     }
 
     @Override
@@ -703,8 +921,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 return true;
             case KeyEvent.KEYCODE_BACK:
                 if (mDrawer.isDrawerOpen(settings_layout)) {
-                    if (!((PreferencesFragment) getPreferencesFragment()).show_main_menu())
+                    if (((PreferencesFragment) getPreferencesFragment()).is_main_menu())
                         mDrawer.closeDrawer(GravityCompat.START, true);
+					else ((PreferencesFragment) getPreferencesFragment()).show_main_menu();
                 } else {
                     if (doubleBackToExitPressedOnce) {
                         finish();
@@ -745,8 +964,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         wheelView.invalidate();
 
         boolean alarms_enabled = sharedPreferences.getBoolean(getString(R.string.alarms_enabled), false);
+		boolean use_ratio = sharedPreferences.getBoolean(getString(R.string.use_ratio), false);
+		WheelData.getInstance().setUseRatio(use_ratio);
 
-        WheelData.getInstance().setAlarmsEnabled(alarms_enabled);
+        int gotway_voltage = Integer.parseInt(sharedPreferences.getString(getString(R.string.gotway_voltage), "0"));
+        WheelData.getInstance().setGotwayVoltage(gotway_voltage);
+
+        //boolean gotway_84v = sharedPreferences.getBoolean(getString(R.string.gotway_84v), false);
+        //WheelData.getInstance().setGotway84V(gotway_84v);
+		WheelData.getInstance().setAlarmsEnabled(alarms_enabled);
 
         if (alarms_enabled) {
             int alarm1Speed = sharedPreferences.getInt(getString(R.string.alarm_1_speed), 0);
@@ -756,13 +982,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             int alarm2Battery = sharedPreferences.getInt(getString(R.string.alarm_2_battery), 0);
             int alarm3Battery = sharedPreferences.getInt(getString(R.string.alarm_3_battery), 0);
             int current_alarm = sharedPreferences.getInt(getString(R.string.alarm_current), 0);
+			int temperature_alarm = sharedPreferences.getInt(getString(R.string.alarm_temperature), 0);
             boolean disablePhoneVibrate = sharedPreferences.getBoolean(getString(R.string.disable_phone_vibrate), false);
 
             WheelData.getInstance().setPreferences(
                     alarm1Speed, alarm1Battery,
                     alarm2Speed, alarm2Battery,
                     alarm3Speed, alarm3Battery,
-                    current_alarm, disablePhoneVibrate);
+                    current_alarm, temperature_alarm, disablePhoneVibrate);
             wheelView.setWarningSpeed(alarm1Speed);
         } else
             wheelView.setWarningSpeed(0);
@@ -883,8 +1110,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 if (resultCode == RESULT_OK) {
                     mDeviceAddress = data.getStringExtra("MAC");
                     Timber.i("Device selected = %s", mDeviceAddress);
+                    String mDeviceName = data.getStringExtra("NAME");
+                    Timber.i("Device selected = %s", mDeviceName);
                     mBluetoothLeService.setDeviceAddress(mDeviceAddress);
                     WheelData.getInstance().full_reset();
+                    WheelData.getInstance().setBtName(mDeviceName);
                     updateScreen(true);
                     setMenuIconStates();
                     mBluetoothLeService.close();
@@ -917,6 +1147,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         intentFilter.addAction(Constants.ACTION_LOGGING_SERVICE_TOGGLED);
         intentFilter.addAction(Constants.ACTION_PEBBLE_SERVICE_TOGGLED);
         intentFilter.addAction(Constants.ACTION_PREFERENCE_CHANGED);
+		intentFilter.addAction(Constants.ACTION_WHEEL_SETTING_CHANGED);
+		intentFilter.addAction(Constants.ACTION_WHEEL_TYPE_RECOGNIZED);	
+		intentFilter.addAction(Constants.ACTION_ALARM_TRIGGERED);			
         return intentFilter;
     }
 

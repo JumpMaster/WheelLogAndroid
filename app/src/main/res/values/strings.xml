@@ -29,6 +29,7 @@
     <string name="start_data_service">Start Logging</string>
     <string name="stop_data_service">Stop Logging</string>
     <string name="started_logging">Started logging to %1$s</string>
+    <string name="wheel_type_recognized">Detected wheel protocol %1$s</string>
     <string name="search_for_wheel">Search for Wheel</string>
     <string name="scanning">Scanning…</string>
     <string name="devices">Devices</string>
@@ -37,14 +38,22 @@
     <string name="mode_ride">Normal</string>
     <string name="waiting_for_wheel">Waiting for wheel…</string>
     <string name="speed">Speed</string>
+	<string name="average_speed">Avg Speed</string>
+	<string name="average_riding_speed">Avg Riding</string>
     <string name="top_speed">Top Speed</string>
     <string name="battery">Battery</string>
     <string name="distance">Distance</string>
-    <string name="ride_time">Ride Time</string>
+	<string name="wheel_distance">Wheel Distance</string>
+	<string name="user_distance">User Distance</string>
+    <string name="ride_time">Journey Time</string>
+	<string name="riding_time">Ride Time</string>
     <string name="voltage">Voltage</string>
     <string name="current">Current</string>
     <string name="power">Power</string>
-    <string name="temperature">Temperature</string>
+    <string name="temperature">System temp</string>
+	<string name="temperature2">CPU(?) temp</string>
+	<string name="angle">Tilt</string>
+	<string name="roll">Roll</string>
     <string name="fan_status">Fan Status</string>
     <string name="mode">Mode</string>
     <string name="total_distance">Total Distance</string>
@@ -67,11 +76,19 @@
     <string name="logging_error_all_location_providers_disabled">Location has been disabled within Android. No location data will be logged.</string>
     <string name="raw_distance">Raw Distance</string>
 
+	<string name="alarm_text_speed">Speed alarm triggered</string>
+	<string name="alarm_text_current">Current alarm triggered</string>
+	<string name="alarm_text_temperature">Temperature alarm triggered</string>
+	
+	
     // PREFERENCES
     <string name="speed_preferences" translatable="false">speed_preferences</string>
     <string name="log_preferences" translatable="false">log_preferences</string>
     <string name="alarm_preferences" translatable="false">alarm_preferences</string>
     <string name="watch_preferences" translatable="false">watch_preferences</string>
+    <string name="wheel_settings" translatable="false">wheel_settings</string> 
+	<string name="trip_settings" translatable="false">trip_settings</string>
+
 
     // ALARM PREFERENCES
     <string name="alarms_enabled" translatable="false">alarms_enabled</string>
@@ -83,6 +100,25 @@
     <string name="alarm_3_speed" translatable="false">alarm_3_speed</string>
     <string name="alarm_3_battery" translatable="false">alarm_3_battery</string>
     <string name="alarm_current" translatable="false">alarm_current</string>
+	<string name="alarm_temperature" translatable="false">alarm_temperature</string>
+	
+    // WHEEL SETTINGS
+    <string name="light_enabled" translatable="false">light_enabled</string>
+    <string name="led_enabled" translatable="false">led_enabled</string>
+    <string name="handle_button_disabled" translatable="false">handle_button_disabled</string>
+    <string name="wheel_max_speed" translatable="false">wheel_max_speed</string>
+    <string name="speaker_volume" translatable="false">speaker_volume</string>
+	<string name="pedals_adjustment" translatable="false">pedals_adjustment</string>
+	<string name="pedals_mode" translatable="false">pedals_mode</string>
+	<string name="light_mode" translatable="false">light_mode</string>
+	<string name="strobe_mode" translatable="false">strobe_mode</string>
+	<string name="led_mode" translatable="false">led_mode</string>
+	<string name="start_calibration" translatable="false">start_calibration</string>
+	<string name="alarm_mode" translatable="false">alarm_mode</string>
+	<string name="gotway_84v" translatable="false">gotway_84v</string>
+    <string name="gotway_voltage" translatable="false">gotway_voltage</string>
+    <string name="no_settings" translatable="false">no_settings</string>
+	
 
     // LOG PREFERENCES
     <string name="auto_log" translatable="false">auto_log</string>
@@ -93,8 +129,17 @@
     // SPEED PREFERENCES
     <string name="use_mph" translatable="false">use_mph</string>
     <string name="max_speed" translatable="false">max_speed</string>
+	<string name="use_ratio" translatable="false">use_ratio</string>
 
     // WATCH PREFERENCES
     <string name="horn_mode" translatable="false">horn_mode</string>
 
+	
+	// TRIP PREFERENCES
+	<string name="reset_top_speed" translatable="false">reset_top_speed</string>
+	<string name="reset_user_distance" translatable="false">reset_user_distance</string>
+    <string name="last_mac" translatable="false">last_mac</string>
+    <string name="about" translatable="false">about</string>
+
+	
 </resources>

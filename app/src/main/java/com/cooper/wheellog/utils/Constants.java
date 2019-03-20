@@ -6,6 +6,7 @@ public class Constants {
 
     public static final String ACTION_BLUETOOTH_CONNECTION_STATE = "com.cooper.wheellog.bluetoothConnectionState";
     public static final String ACTION_WHEEL_DATA_AVAILABLE = "com.cooper.wheelTimber.wheelDataAvailable";
+	public static final String ACTION_WHEEL_SETTING_CHANGED = "com.cooper.wheelTimber.wheelSettingChanged";
     public static final String ACTION_REQUEST_KINGSONG_SERIAL_DATA = "com.cooper.wheellog.requestSerialData";
     public static final String ACTION_REQUEST_KINGSONG_NAME_DATA = "com.cooper.wheellog.requestNameData";
     public static final String ACTION_REQUEST_KINGSONG_HORN = "com.cooper.wheellog.requestHorn";
@@ -17,6 +18,7 @@ public class Constants {
     public static final String ACTION_ALARM_TRIGGERED = "com.cooper.wheellog.alarmTriggered";
     public static final String ACTION_PEBBLE_APP_READY = "com.cooper.wheellog.pebbleAppReady";
     public static final String ACTION_PEBBLE_APP_SCREEN = "com.cooper.wheellog.pebbleAppScreen";
+	public static final String ACTION_WHEEL_TYPE_RECOGNIZED = "com.cooper.wheellog.wheelTypeRecognized";
 
     static final String NOTIFICATION_BUTTON_CONNECTION = "com.cooper.wheellog.notificationConnectionButton";
     static final String NOTIFICATION_BUTTON_LOGGING = "com.cooper.wheellog.notificationLoggingButton";
@@ -28,6 +30,17 @@ public class Constants {
 
     public static final String GOTWAY_READ_CHARACTER_UUID = "0000ffe1-0000-1000-8000-00805f9b34fb";
     public static final String GOTWAY_SERVICE_UUID = "0000ffe0-0000-1000-8000-00805f9b34fb";
+
+    public static final String INMOTION_DESCRIPTER_UUID = "00002902-0000-1000-8000-00805f9b34fb";
+    public static final String INMOTION_READ_CHARACTER_UUID = "0000ffe4-0000-1000-8000-00805f9b34fb";
+    public static final String INMOTION_SERVICE_UUID = "0000ffe0-0000-1000-8000-00805f9b34fb";
+    public static final String INMOTION_WRITE_CHARACTER_UUID = "0000ffe9-0000-1000-8000-00805f9b34fb";
+    public static final String INMOTION_WRITE_SERVICE_UUID = "0000ffe5-0000-1000-8000-00805f9b34fb";
+
+    public static final String NINEBOT_Z_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+    public static final String NINEBOT_Z_WRITE_CHARACTER_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+    public static final String NINEBOT_Z_READ_CHARACTER_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+    public static final String NINEBOT_Z_DESCRIPTER_UUID = "00002902-0000-1000-8000-00805f9b34fb";
 
     public static final UUID PEBBLE_APP_UUID = UUID.fromString("185c8ae9-7e72-451a-a1c7-8f1e81df9a3d");
     public static final int PEBBLE_KEY_READY = 11;
@@ -45,6 +58,15 @@ public class Constants {
     public static final String INTENT_EXTRA_GRAPH_UPDATE_AVILABLE = "graph_update_available";
     public static final String INTENT_EXTRA_CONNECTION_STATE = "connection_state";
     public static final String INTENT_EXTRA_ALARM_TYPE = "alarm_type";
+    public static final String INTENT_EXTRA_WHEEL_SETTINGS = "wheel_settings";
+	public static final String INTENT_EXTRA_WHEEL_LIGHT = "wheel_light";
+	public static final String INTENT_EXTRA_WHEEL_LED = "wheel_led";
+	public static final String INTENT_EXTRA_WHEEL_BUTTON = "wheel_button";
+	public static final String INTENT_EXTRA_WHEEL_MAX_SPEED= "wheel_max_speed";
+	public static final String INTENT_EXTRA_WHEEL_SPEAKER_VOLUME = "wheel_speaker_volume";
+	public static final String INTENT_EXTRA_WHEEL_REFRESH = "wheel_refresh";
+	public static final String INTENT_EXTRA_WHEEL_PEDALS_ADJUSTMENT = "pedals_adjustment";
+	public static final String INTENT_EXTRA_WHEEL_TYPE = "wheel_type";
 
     public static final String PREFERENCES_FRAGMENT_TAG = "tagPrefs";
 
@@ -52,7 +74,9 @@ public class Constants {
         Unknown,
         KINGSONG,
         GOTWAY,
-        NINEBOT
+        NINEBOT,
+        NINEBOT_Z,
+        INMOTION;
     }
 
     public enum PEBBLE_APP_SCREEN {
@@ -73,7 +97,9 @@ public class Constants {
 
     public enum ALARM_TYPE {
         SPEED(0),
-        CURRENT(1);
+        CURRENT(1),
+		TEMPERATURE(2);
+		
 
         private final int value;
 

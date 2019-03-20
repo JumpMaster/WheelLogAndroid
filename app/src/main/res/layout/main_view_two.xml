@@ -44,6 +44,28 @@
                 android:id="@+id/tvTopSpeed"
                 android:visibility="gone"
                 style="@style/Stats" />
+				
+			<TextView
+                android:id="@+id/tvTitleAverageSpeed"
+                android:visibility="gone"
+                style="@style/Stats.Title"
+                android:text="@string/average_speed"/>
+
+            <TextView
+                android:id="@+id/tvAverageSpeed"
+                android:visibility="gone"
+                style="@style/Stats" />
+				
+			<TextView
+                android:id="@+id/tvTitleAverageRidingSpeed"
+                android:visibility="gone"
+                style="@style/Stats.Title"
+                android:text="@string/average_riding_speed"/>
+
+            <TextView
+                android:id="@+id/tvAverageRidingSpeed"
+                android:visibility="gone"
+                style="@style/Stats" />
 
             <TextView
                 android:id="@+id/tvTitleBattery"
@@ -66,7 +88,40 @@
                 android:id="@+id/tvTemperature"
                 android:visibility="gone"
                 style="@style/Stats" />
+				
+			<TextView
+                android:id="@+id/tvTitleTemperature2"
+                android:visibility="gone"
+                style="@style/Stats.Title"
+                android:text="@string/temperature2"/>
 
+            <TextView
+                android:id="@+id/tvTemperature2"
+                android:visibility="gone"
+                style="@style/Stats" />
+
+			<TextView
+                android:id="@+id/tvTitleAngle"
+                android:visibility="gone"
+                style="@style/Stats.Title"
+                android:text="@string/angle"/>
+
+            <TextView
+                android:id="@+id/tvAngle"
+                android:visibility="gone"
+                style="@style/Stats" />
+				
+			<TextView
+                android:id="@+id/tvTitleRoll"
+                android:visibility="gone"
+                style="@style/Stats.Title"
+                android:text="@string/roll"/>
+
+            <TextView
+                android:id="@+id/tvRoll"
+                android:visibility="gone"
+                style="@style/Stats" />
+				
             <TextView
                 android:id="@+id/tvTitleRideTime"
                 android:visibility="gone"
@@ -75,6 +130,17 @@
 
             <TextView
                 android:id="@+id/tvRideTime"
+                android:visibility="gone"
+                style="@style/Stats" />
+				
+			<TextView
+                android:id="@+id/tvTitleRidingTime"
+                android:visibility="gone"
+                style="@style/Stats.Title"
+                android:text="@string/riding_time"/>
+
+            <TextView
+                android:id="@+id/tvRidingTime"
                 android:visibility="gone"
                 style="@style/Stats" />
 
@@ -86,6 +152,28 @@
 
             <TextView
                 android:id="@+id/tvDistance"
+                android:visibility="gone"
+                style="@style/Stats" />
+				
+            <TextView
+                android:id="@+id/tvTitleWheelDistance"
+                android:visibility="gone"
+                style="@style/Stats.Title"
+                android:text="@string/wheel_distance"/>
+
+            <TextView
+                android:id="@+id/tvWheelDistance"
+                android:visibility="gone"
+                style="@style/Stats" />
+				
+            <TextView
+                android:id="@+id/tvTitleUserDistance"
+                android:visibility="gone"
+                style="@style/Stats.Title"
+                android:text="@string/user_distance"/>
+
+            <TextView
+                android:id="@+id/tvUserDistance"
                 android:visibility="gone"
                 style="@style/Stats" />
 

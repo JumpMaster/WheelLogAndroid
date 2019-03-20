@@ -22,4 +22,29 @@
         android:title="Watch Preferences"
         android:icon="@drawable/ic_watch_white_24dp" />
 
+    <Preference
+        android:key="@string/wheel_settings"
+		android:enabled="false"
+        android:title="Wheel Settings"
+        android:icon="@drawable/ic_action_wheel_white" />
+	
+	<Preference
+        android:key="@string/reset_top_speed"
+		android:enabled="true"
+        android:title="Reset top speed" />
+
+	<Preference
+        android:key="@string/reset_user_distance"
+		android:enabled="true"
+        android:title="Reset user distance" />
+
+    <Preference
+        android:key="@string/last_mac"
+        android:enabled="true"
+        android:title="Edit MAC address" />
+
+    <Preference
+        android:key="@string/about"
+        android:enabled="true"
+        android:title="About WheelLog" />
 </PreferenceScreen>
