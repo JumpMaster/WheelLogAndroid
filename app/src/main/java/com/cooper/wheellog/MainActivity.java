@@ -568,34 +568,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 break;
             case 1: // Text View
                 if (use_mph) {
-                    tvSpeed.setText(String.format(Locale.US, "%.1f mph", kmToMiles(WheelData.getInstance().getSpeedDouble())));
-                    tvTopSpeed.setText(String.format(Locale.US, "%.1f mph", kmToMiles(WheelData.getInstance().getTopSpeedDouble())));
-					tvAverageSpeed.setText(String.format(Locale.US, "%.1f mph", kmToMiles(WheelData.getInstance().getAverageSpeedDouble())));
-					tvAverageRidingSpeed.setText(String.format(Locale.US, "%.1f mph", kmToMiles(WheelData.getInstance().getAverageRidingSpeedDouble())));
-                    tvDistance.setText(String.format(Locale.US, "%.2f mi", kmToMiles(WheelData.getInstance().getDistanceDouble())));
-					tvWheelDistance.setText(String.format(Locale.US, "%.2f mi", kmToMiles(WheelData.getInstance().getWheelDistanceDouble())));
-					tvUserDistance.setText(String.format(Locale.US, "%.2f mi", kmToMiles(WheelData.getInstance().getUserDistanceDouble())));
-                    tvTotalDistance.setText(String.format(Locale.US, "%.2f mi", kmToMiles(WheelData.getInstance().getTotalDistanceDouble())));
+                    tvSpeed.setText(String.format(Locale.US, "%.1f " + getString(R.string.mph), kmToMiles(WheelData.getInstance().getSpeedDouble())));
+                    tvTopSpeed.setText(String.format(Locale.US, "%.1f " + getString(R.string.mph), kmToMiles(WheelData.getInstance().getTopSpeedDouble())));
+					tvAverageSpeed.setText(String.format(Locale.US, "%.1f " + getString(R.string.mph), kmToMiles(WheelData.getInstance().getAverageSpeedDouble())));
+					tvAverageRidingSpeed.setText(String.format(Locale.US, "%.1f " + getString(R.string.mph), kmToMiles(WheelData.getInstance().getAverageRidingSpeedDouble())));
+                    tvDistance.setText(String.format(Locale.US, "%.2f " + getString(R.string.milli), kmToMiles(WheelData.getInstance().getDistanceDouble())));
+					tvWheelDistance.setText(String.format(Locale.US, "%.2f " + getString(R.string.milli), kmToMiles(WheelData.getInstance().getWheelDistanceDouble())));
+					tvUserDistance.setText(String.format(Locale.US, "%.2f " + getString(R.string.milli), kmToMiles(WheelData.getInstance().getUserDistanceDouble())));
+                    tvTotalDistance.setText(String.format(Locale.US, "%.2f " + getString(R.string.milli), kmToMiles(WheelData.getInstance().getTotalDistanceDouble())));
                 } else {
-                    tvSpeed.setText(String.format(Locale.US, "%.1f km/h", WheelData.getInstance().getSpeedDouble()));
-                    tvTopSpeed.setText(String.format(Locale.US, "%.1f km/h", WheelData.getInstance().getTopSpeedDouble()));
-					tvAverageSpeed.setText(String.format(Locale.US, "%.1f km/h", WheelData.getInstance().getAverageSpeedDouble()));
-					tvAverageRidingSpeed.setText(String.format(Locale.US, "%.1f km/h", WheelData.getInstance().getAverageRidingSpeedDouble()));
-                    tvDistance.setText(String.format(Locale.US, "%.3f km", WheelData.getInstance().getDistanceDouble()));
-					tvWheelDistance.setText(String.format(Locale.US, "%.3f km", WheelData.getInstance().getWheelDistanceDouble()));
-					tvUserDistance.setText(String.format(Locale.US, "%.3f km", WheelData.getInstance().getUserDistanceDouble()));
-                    tvTotalDistance.setText(String.format(Locale.US, "%.3f km", WheelData.getInstance().getTotalDistanceDouble()));
+                    tvSpeed.setText(String.format(Locale.US, "%.1f " + getString(R.string.kmh), WheelData.getInstance().getSpeedDouble()));
+                    tvTopSpeed.setText(String.format(Locale.US, "%.1f " + getString(R.string.kmh), WheelData.getInstance().getTopSpeedDouble()));
+					tvAverageSpeed.setText(String.format(Locale.US, "%.1f " + getString(R.string.kmh), WheelData.getInstance().getAverageSpeedDouble()));
+					tvAverageRidingSpeed.setText(String.format(Locale.US, "%.1f " + getString(R.string.kmh), WheelData.getInstance().getAverageRidingSpeedDouble()));
+                    tvDistance.setText(String.format(Locale.US, "%.3f " + getString(R.string.km), WheelData.getInstance().getDistanceDouble()));
+					tvWheelDistance.setText(String.format(Locale.US, "%.3f " + getString(R.string.km), WheelData.getInstance().getWheelDistanceDouble()));
+					tvUserDistance.setText(String.format(Locale.US, "%.3f " + getString(R.string.km), WheelData.getInstance().getUserDistanceDouble()));
+                    tvTotalDistance.setText(String.format(Locale.US, "%.3f " + getString(R.string.km), WheelData.getInstance().getTotalDistanceDouble()));
                 }
 
-                tvVoltage.setText(String.format(Locale.US, "%.2fV", WheelData.getInstance().getVoltageDouble()));
+                tvVoltage.setText(String.format(Locale.US, "%.2f " + getString(R.string.volt), WheelData.getInstance().getVoltageDouble()));
                 tvTemperature.setText(String.format(Locale.US, "%d°C", WheelData.getInstance().getTemperature()));
 				tvTemperature2.setText(String.format(Locale.US, "%d°C", WheelData.getInstance().getTemperature2()));
 				tvAngle.setText(String.format(Locale.US, "%.2f°", WheelData.getInstance().getAngle()));
 				tvRoll.setText(String.format(Locale.US, "%.2f°", WheelData.getInstance().getRoll()));
-                tvCurrent.setText(String.format(Locale.US, "%.2fA", WheelData.getInstance().getCurrentDouble()));
-                tvPower.setText(String.format(Locale.US, "%.2fW", WheelData.getInstance().getPowerDouble()));
+                tvCurrent.setText(String.format(Locale.US, "%.2f " + getString(R.string.amp), WheelData.getInstance().getCurrentDouble()));
+                tvPower.setText(String.format(Locale.US, "%.2f " + getString(R.string.watt), WheelData.getInstance().getPowerDouble()));
                 tvBattery.setText(String.format(Locale.US, "%d%%", WheelData.getInstance().getBatteryLevel()));
-                tvFanStatus.setText(WheelData.getInstance().getFanStatus() == 0 ? "Off" : "On");
+                tvFanStatus.setText(WheelData.getInstance().getFanStatus() == 0 ? getString(R.string.off) : getString(R.string.on));
                 tvVersion.setText(String.format(Locale.US, "%s", WheelData.getInstance().getVersion()));
                 tvName.setText(WheelData.getInstance().getName());
                 tvModel.setText(WheelData.getInstance().getModel());
@@ -614,8 +614,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         LineDataSet dataSetCurrent;
 
                         if (chart1.getData() == null) {
-                            dataSetSpeed = new LineDataSet(null, "speed");
-                            dataSetCurrent = new LineDataSet(null, "current");
+                            dataSetSpeed = new LineDataSet(null, getString(R.string.speed_axis));
+                            dataSetCurrent = new LineDataSet(null, getString(R.string.current_axis));
                             dataSetSpeed.setLineWidth(2);
                             dataSetCurrent.setLineWidth(2);
                             dataSetSpeed.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -635,8 +635,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                             findViewById(R.id.leftAxisLabel).setVisibility(View.VISIBLE);
                             findViewById(R.id.rightAxisLabel).setVisibility(View.VISIBLE);
                         } else {
-                            dataSetSpeed = (LineDataSet) chart1.getData().getDataSetByLabel("speed", true);
-                            dataSetCurrent = (LineDataSet) chart1.getData().getDataSetByLabel("current", true);
+                            dataSetSpeed = (LineDataSet) chart1.getData().getDataSetByLabel(getString(R.string.speed_axis), true);
+                            dataSetCurrent = (LineDataSet) chart1.getData().getDataSetByLabel(getString(R.string.current_axis), true);
                         }
 
                         dataSetSpeed.clear();
@@ -765,6 +765,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         chart1.setHighlightPerTapEnabled(false);
         chart1.setHighlightPerDragEnabled(false);
         chart1.getLegend().setTextColor(getResources().getColor(android.R.color.white));
+        chart1.setNoDataText(getString(R.string.no_chart_data));
         chart1.setNoDataTextColor(getResources().getColor(android.R.color.white));
 
         YAxis leftAxis = chart1.getAxisLeft();
@@ -853,6 +854,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     protected void onDestroy() {
         stopPebbleService();
+        stopGarminConnectIQ();
         stopLoggingService();
         WheelData.getInstance().full_reset();
         if (mBluetoothLeService != null) {
@@ -861,7 +863,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             mBluetoothLeService = null;
         }
         super.onDestroy();
-        new CountDownTimer(500, 100) {
+        new CountDownTimer(60000, 100) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -903,6 +905,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 return true;
             case R.id.miWatch:
                 togglePebbleService();
+                if (SettingsUtil.getGarminConnectIQEnable(this))
+                    toggleGarminConnectIQ();
+                else
+                    stopGarminConnectIQ();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -967,7 +973,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 		boolean use_ratio = sharedPreferences.getBoolean(getString(R.string.use_ratio), false);
 		WheelData.getInstance().setUseRatio(use_ratio);
 
-        int gotway_voltage = Integer.parseInt(sharedPreferences.getString(getString(R.string.gotway_voltage), "0"));
+        int gotway_voltage = Integer.parseInt(sharedPreferences.getString(getString(R.string.gotway_voltage), "1"));
         WheelData.getInstance().setGotwayVoltage(gotway_voltage);
 
         //boolean gotway_84v = sharedPreferences.getBoolean(getString(R.string.gotway_84v), false);
@@ -1078,6 +1084,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             stopService(pebbleServiceIntent);
         else
             startService(pebbleServiceIntent);
+    }
+
+    private void stopGarminConnectIQ() {
+        if (GarminConnectIQ.isInstanceCreated())
+            toggleGarminConnectIQ();
+    }
+    private void toggleGarminConnectIQ() {
+        Intent garminConnectIQIntent = new Intent(getApplicationContext(), GarminConnectIQ.class);
+        if (GarminConnectIQ.isInstanceCreated())
+            stopService(garminConnectIQIntent);
+        else
+            startService(garminConnectIQIntent);
     }
 
     private void startBluetoothService() {
@@ -1203,4 +1221,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         return frag;
     }
+
+
 }

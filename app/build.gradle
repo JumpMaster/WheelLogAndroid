@@ -7,7 +7,7 @@ repositories {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
 
     lintOptions {
         abortOnError false
@@ -17,8 +17,8 @@ android {
         applicationId "com.cooper.wheellog"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 36
-        versionName "2.0.19"
+        versionCode 43
+        versionName "2.0.23"
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm dd.MM.yyyy", java.util.Locale.US).format(new java.util.Date(' + System.currentTimeMillis() +'L))'
     }
     buildTypes {
@@ -33,7 +33,7 @@ android {
 
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:design:25.1.0'
     implementation 'com.android.support:gridlayout-v7:25.1.0'
     implementation 'com.google.android.gms:play-services-drive:10.0.1'
@@ -42,6 +42,8 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.3.1'
     implementation 'com.pavelsikun:material-seekbar-preference:2.3.0+'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.0'
-    implementation "com.github.hotchemi:permissionsdispatcher:2.2.0"
+    implementation 'com.github.hotchemi:permissionsdispatcher:2.2.0'
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:2.2.0"
+    implementation files('libs/connectiq.jar')
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
 }
